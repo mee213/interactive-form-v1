@@ -5,12 +5,16 @@ const main = () => {
     $('#name').focus();
     $('#other-title').addClass('is-hidden');
     $('#design').prop('selectedIndex', 0);
-    $("#color option").each(function(i){
+    $("#color option").each(function(){
         $(this).removeClass('is-hidden');
     });
     $('#color').prop('selectedIndex', 0);
     $('.activities input[type="checkbox"]').prop('checked', false);
     $('.activities').append('<p class="total-due"></p>');
+    $('#payment option[value="select_method"]').prop('disabled', true);
+    $('#payment option[value="credit card"]').prop('selected', true);
+    $('div.paypal').addClass('is-hidden');
+    $('div.bitcoin').addClass('is-hidden');
 
     // "JOB ROLE" SECTION
 
@@ -56,8 +60,7 @@ const main = () => {
                     $('#color').prop('selectedIndex', 0);
                 }
             }
-        });
-        
+        }); 
     });
 
     // "REGISTER FOR ACTIVITIES" SECTION
@@ -142,6 +145,36 @@ const main = () => {
         this.checked ? totalDue += 100 : totalDue -= 100;
         $totalDue.text(`Total: $${totalDue}`);
     });
+
+    // "PAYMENT INFO" SECTION
+
+    $('#payment').change(function() {
+        
+        let selectedPayment = $(this).val();
+        const $creditCardDiv = $('div.credit-card');
+        const $paypalDiv = $('div.paypal');
+        const $bitcoinDiv = $('div.bitcoin');
+
+        if (selectedPayment === "credit card") {
+            $creditCardDiv.removeClass('is-hidden');
+            $paypalDiv.addClass('is-hidden');
+            $bitcoinDiv.addClass('is-hidden');
+        }
+
+        if (selectedPayment === "paypal") {
+            $paypalDiv.removeClass('is-hidden');
+            $creditCardDiv.addClass('is-hidden');
+            $bitcoinDiv.addClass('is-hidden');
+        }
+
+        if (selectedPayment === "bitcoin") {
+            $bitcoinDiv.removeClass('is-hidden');
+            $paypalDiv.addClass('is-hidden');
+            $creditCardDiv.addClass('is-hidden');
+        }
+    });
+
+
 
 }
 
