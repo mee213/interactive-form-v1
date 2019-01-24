@@ -149,6 +149,15 @@ button:hover {
   clear: both;
 }
 
+.name-error,
+.mail-error,
+.act-error,
+.cc-error,
+.zip-error,
+.cvv-error {
+	color: red;
+}
+
 /* ================================= 
   Media Queries
 ==================================== */
