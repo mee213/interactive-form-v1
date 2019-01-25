@@ -20,6 +20,7 @@ const main = () => {
     $('#payment option[value="credit card"]').prop('selected', true);
     $('div.paypal').addClass('is-hidden');
     $('div.bitcoin').addClass('is-hidden');
+    $('div#colors-js-puns').addClass('is-hidden');
 
     // "JOB ROLE" SECTION
 
@@ -37,6 +38,16 @@ const main = () => {
 
         // selectedDesign = 'js puns' OR 'heart js'
         let selectedDesign = $(this).val();
+
+        // extra credit: unhides color selections when a design is chosen
+        if (selectedDesign === 'js puns' || selectedDesign === 'heart js') {
+            $('div#colors-js-puns').removeClass('is-hidden');
+        }
+
+        // extra credit: re-hides color selections if no design chosen
+        if (selectedDesign !== 'js puns' && selectedDesign !== 'heart js') {
+            $('div#colors-js-puns').addClass('is-hidden');
+        }
 
         $("#color option").each(function(i){
             if ($(this).val() === 'cornflowerblue' || $(this).val() === 'darkslategrey' || $(this).val() === 'gold') {
