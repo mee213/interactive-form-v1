@@ -21,6 +21,7 @@ const main = () => {
     $('div.paypal').addClass('is-hidden');
     $('div.bitcoin').addClass('is-hidden');
     $('div#colors-js-puns').addClass('is-hidden');
+    $('#cvv').parent().after('<p class="cc-error"></p>');
 
     // "JOB ROLE" SECTION
 
@@ -225,9 +226,13 @@ const main = () => {
             // don't submit and display error if cc number not valid
             if (!(/^[0-9]{13,16}$/).test($('#cc-num').val())) {
                 event.preventDefault();
-                // do not duplicate the error message if the form is submitted a second time with same invalid input
-                if (!$('.cc-error').length) {
-                    $('label[for="exp-month"]').before('<p class="cc-error">Please enter between 13-16 digits, numbers only.</p>');
+                // extra credit: conditional error message depending on type of CC number
+                if ($('#cc-num').val()) { // has a value but doesn't validate
+                    // custom error message if cc input field is has content but doesn't validate
+                    $('.cc-error').text('Please enter a valid credit card number between 13-16 digits, numbers only.');
+                } else { // field is empty, no value at all
+                    // custom error message if cc input field is completely empty
+                    $('.cc-error').text('Please enter a credit card number.');
                 }
                 $('#cc-num').css('border-color', 'red');
             }
@@ -294,7 +299,7 @@ const main = () => {
     $('#cc-num').change(function() {
         //  if there was a previous error message and the new input passes validation
         if ((/^[0-9]{13,16}$/).test($('#cc-num').val()) && $('.cc-error')) {
-            $('.cc-error').remove();
+            $('.cc-error').empty();
             // make the border colors behave as they did before the validation error occured
             $('#cc-num').css('border-color', inputBorderNoFocus);
             $('#cc-num').focus(function() {
