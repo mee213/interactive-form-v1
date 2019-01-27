@@ -273,18 +273,28 @@ const main = () => {
         }
     });
 
-    $('#mail').change(function() {
-        //  if there was a previous error message and the new input passes validation
-        if ((/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]{2,61})$/i).test($('#mail').val()) && $('.mail-error')) {
-            $('.mail-error').remove();
-            // make the border colors behave as they did before the validation error occured
-            $('#mail').css('border-color', inputBorderNoFocus);
-            $('#mail').focus(function() {
-                $('#mail').css('border-color', inputBorderWithFocus);
-            });
-            $('#mail').blur(function() {
+    $('#mail').on('change keyup blur', function() {
+
+        //  if the new input passes validation
+        if ((/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]{2,61})$/i).test($('#mail').val())) {
+            //  if there was a previous error message
+            if ($('.mail-error')) {
+                $('.mail-error').remove();
+                // make the border colors behave as they did before the validation error occured
                 $('#mail').css('border-color', inputBorderNoFocus);
-            });
+                $('#mail').focus(function() {
+                    $('#mail').css('border-color', inputBorderWithFocus);
+                });
+                $('#mail').blur(function() {
+                    $('#mail').css('border-color', inputBorderNoFocus);
+                });
+            }    
+        } else { // the new input doesn't pass validation
+            // do not duplicate the error message if it already exists
+            if (!$('.mail-error').length) {
+                $('#mail').before('<p class="mail-error">Please add a valid email address.</p>');
+            }
+            $('#mail').css('border-color', 'red');
         }
     });
 
