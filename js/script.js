@@ -201,8 +201,7 @@ const main = () => {
             $('#name').css('border-color', 'red');
         }
 
-        // regex from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#Validation
-        if (!(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/).test($('#mail').val())) {
+        if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]{2,61})$/i).test($('#mail').val())) {
             event.preventDefault();
             // do not duplicate the error message if the form is submitted a second time with same invalid input
             if (!$('.mail-error').length) {
@@ -276,8 +275,7 @@ const main = () => {
 
     $('#mail').change(function() {
         //  if there was a previous error message and the new input passes validation
-        // regex from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#Validation
-        if ((/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/).test($('#mail').val()) && $('.mail-error')) {
+        if ((/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]{2,61})$/i).test($('#mail').val()) && $('.mail-error')) {
             $('.mail-error').remove();
             // make the border colors behave as they did before the validation error occured
             $('#mail').css('border-color', inputBorderNoFocus);
@@ -297,18 +295,28 @@ const main = () => {
     });
 
     $('#cc-num').change(function() {
-        //  if there was a previous error message and the new input passes validation
-        if ((/^[0-9]{13,16}$/).test($('#cc-num').val()) && $('.cc-error')) {
-            $('.cc-error').empty();
-            // make the border colors behave as they did before the validation error occured
-            $('#cc-num').css('border-color', inputBorderNoFocus);
-            $('#cc-num').focus(function() {
-                $('#cc-num').css('border-color', inputBorderWithFocus);
-            });
-            $('#cc-num').blur(function() {
+        
+        //  if there was a previous error message 
+        if ($('.cc-error').text().length) {
+            
+            // if the new input passes validation
+            if ((/^[0-9]{13,16}$/).test($('#cc-num').val())) {
+                $('.cc-error').empty();
+                // make the border colors behave as they did before the validation error occured
                 $('#cc-num').css('border-color', inputBorderNoFocus);
-            });
+                $('#cc-num').focus(function() {
+                    $('#cc-num').css('border-color', inputBorderWithFocus);
+                });
+                $('#cc-num').blur(function() {
+                    $('#cc-num').css('border-color', inputBorderNoFocus);
+                });
+            } else if ($('#cc-num').val()) { // has a value but doesn't validate
+                    $('.cc-error').text('Please enter a valid credit card number between 13-16 digits, numbers only.');
+            } else { // field is empty, no value at all
+                    $('.cc-error').text('Please enter a credit card number.');
+            }
         }
+            
     });
 
     $('#zip').change(function() {
